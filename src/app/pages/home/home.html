@@ -1,13 +1,6 @@
-<nav class="flex items-center justify-between bg-gray-900 px-4 py-2 text-white">
-  <div class="flex items-center gap-4">
-    <img src="https://www.freetogame.com/favicon.ico" alt="Logo" class="h-8 w-8" />
-    <h1 class="text-xl font-bold">FreeToGame</h1>
-  </div>
-  <div>
-  <app-filters-component (categorySelected)="onFilterChange($event)"></app-filters-component>
-  </div>
-  <app-tabs></app-tabs>
-</nav>
+<div>
+  <app-filters-component class="ml-5 mt-3" (categorySelected)="onFilterChange($event)"></app-filters-component>
+</div>
 <main class="flex flex-wrap justify-center gap-6 py-6 ">
   
 @for (game of games; track game.id) {

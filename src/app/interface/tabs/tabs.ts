@@ -16,20 +16,14 @@ export class Tabs {
     this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
         switch (event.urlAfterRedirects) {
-          case "/":
-            this.selectedTab = [true, false, false, false];
-            break;
           case "/home":
-            this.selectedTab = [false, true, false, false];
-            break;
-          case "/whishlist":
-            this.selectedTab = [false, false, true, false];
+            this.selectedTab = [true, false];
             break;
           case "/profile":
-            this.selectedTab = [false, false, false, true];
+            this.selectedTab = [false, true];
             break;
           default:
-            this.selectedTab = [false, false, false, false];
+            this.selectedTab = [false, false];
         }
       }
     }); 
