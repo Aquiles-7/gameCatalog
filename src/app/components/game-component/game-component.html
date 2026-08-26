@@ -1,0 +1,18 @@
+<section class="group w-full max-w-100  ">
+  <div class=" group max-h-[450px] min-h-[450px] rounded-2xl bg-linear-to-r from-gray-800 to-gray-950 px-4 pb-7 font-bold shadow-2xs shadow-gray-900 transition hover:scale-105">
+    <div class="flex justify-center">
+      <img class="rounded-2xl shadow-2xl transition group-hover:rotate-6 mx-auto" src="{{game.thumbnail}}" />
+    </div>
+    <h1 class="pt-1.5 text-3xl text-sky-100">{{game.title}}</h1>
+    <div class="mt-1.5 flex gap-2 text-gray-800">
+      <p class="inline-block rounded-3xl bg-amber-300 px-2">{{game.genre}}</p>
+      <p class="inline-block rounded-3xl bg-amber-300 px-2">{{game.platform}}</p>
+    </div>
+    <p class="line-clamp-3 pt-1.5 text-xs text-sky-100">{{game.short_description}}</p>
+    <div class="mt-7 flex items-center justify-between">
+      <button (click)="openGame(game.game_url)" class="rounded-2xl bg-amber-300 px-8 text-[125%] font-bold text-gray-800 uppercase transition hover:scale-120 hover:bg-sky-50 hover:text-gray-900 hover:shadow-lg hover:shadow-gray-900">Play</button>
+      <p class="text-sky-100">{{game.release_date}}</p>
+    </div>
+  </div>
+  
+</section>

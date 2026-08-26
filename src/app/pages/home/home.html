@@ -1,0 +1,22 @@
+<nav class="flex items-center justify-between bg-gray-900 px-4 py-2 text-white">
+  <div class="flex items-center gap-4">
+    <img src="https://www.freetogame.com/favicon.ico" alt="Logo" class="h-8 w-8" />
+    <h1 class="text-xl font-bold">FreeToGame</h1>
+  </div>
+  <div>
+  <app-filters-component (categorySelected)="onFilterChange($event)"></app-filters-component>
+  </div>
+  <app-tabs></app-tabs>
+</nav>
+<main class="flex flex-wrap justify-center gap-6 py-6 ">
+  
+@for (game of games; track game.id) {
+      <div class="transition-transform duration-200 hover:scale-[1.02] gap-6 ">
+        <app-game-component class="flex flex-col items-center m-6" [game]="game"></app-game-component>
+      </div>
+      
+    }
+<div class="fixed inset-0 -z-10 bg-slate-900 ">
+  <div class="absolute inset-0 bg-radial-[circle_at_center] from-sky-500/30 to-transparent"></div>
+</div>
+</main>

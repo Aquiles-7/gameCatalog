@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "proyectofinalp5-646a7",
+    "public": "dist/gameCatalog/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
