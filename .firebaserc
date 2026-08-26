@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "proyectofinalp5"
-  }
+  },
+  "targets": {
+    "proyectofinalp5": {
+      "hosting": {
+        "gamecatalog": [
+          "proyectofinalp5-646a7"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

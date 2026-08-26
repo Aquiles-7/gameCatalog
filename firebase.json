@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "gamecatalog",
     "public": "dist/gameCatalog",
     "ignore": [
       "firebase.json",
