@@ -58,11 +58,62 @@
       <h2 class="text-2xl font-semibold text-slate-900">Mi Lista</h2>
       <p class="mt-2 text-sm text-slate-600">Aquí verás tu lista de deseos.</p>
 
-      <div class="mt-6 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-slate-600">
-        No hay juegos en tu lista.
-      </div>
+        <section class="mt-6">
+          <h2 class="text-xl font-semibold mb-3">Mi Lista</h2>
+        
+          <!-- Estado de carga -->
+          <div *ngIf="loading" class="text-gray-500 text-sm">
+            Cargando tus favoritos...
+          </div>
+        
+          <!-- Estado de error -->
+          <div *ngIf="!loading && errorMessage" class="text-red-600 text-sm">
+            {{ errorMessage }}
+          </div>
+        
+          <!-- Estado vacío -->
+          <div
+            *ngIf="!loading && !errorMessage && favorites.length === 0"
+            class="text-gray-500 text-sm"
+          >
+            No hay juegos en tu lista.
+          </div>
+        
+          <!-- Listado de favoritos -->
+          <div
+            *ngIf="!loading && !errorMessage && favorites.length > 0"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+          >
+            <div
+              *ngFor="let game of favorites"
+              class="bg-white rounded-lg shadow p-3 flex flex-col gap-2"
+            >
+              <img
+                [src]="game.thumbnail"
+                [alt]="game.title"
+                class="rounded-md w-full h-32 object-cover"
+              />
+              <h3 class="font-medium">{{ game.title }}</h3>
+        
+              <div class="flex items-center justify-between mt-1">
+                <button
+                  type="button"
+                  (click)="openGame(game)"
+                  class="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                >
+                  Jugar
+                </button>
+                <button
+                  type="button"
+                  (click)="removeFromWishlist(game)"
+                  class="px-3 py-1 border border-red-500 text-red-600 rounded-md text-sm hover:bg-red-50"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
     </div>
-    
-
   </div>
 </div>

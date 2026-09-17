@@ -1,18 +1,37 @@
-<section class="group w-full max-w-100  ">
-  <div class="border-x-4 border-b-4 border-slate-950 shadow-2xl shadow-cyan-950 group max-h-112.5 min-h-112.5 rounded-2xl bg-linear-to-r from-gray-800 to-slate-950 px-4 pb-7 transition hover:scale-105">
+<section class="group w-full max-w-100 ">
+  <div class="mt-auto border-x-4 border-b-4 border-slate-950 shadow-2xl shadow-cyan-950 group h-112.5 flex flex-col rounded-2xl bg-linear-to-r from-gray-800 to-slate-950 px-4 pb-7 transition hover:scale-105">
     <div class="flex justify-center">
       <img class="font-bold rounded-2xl shadow-2xl transition group-hover:rotate-6 mx-auto" src="{{game.thumbnail}}" />
     </div>
-    <h1 class="pt-1.5 text-3xl text-sky-100">{{game.title}}</h1>
+    <h1 class="pt-1.5 text-3xl text-sky-100 truncate">{{game.title}}</h1>
     <div class="font-bold mt-1.5 flex gap-2 text-gray-800">
       <p class="inline-block rounded-3xl bg-amber-300 px-2">{{game.genre}}</p>
       <p class="inline-block rounded-3xl bg-amber-300 px-2">{{game.platform}}</p>
     </div>
-    <p class="font-mono line-clamp-3 pt-1.5 text-xs text-sky-100">{{game.short_description}}</p>
-    <div class="mt-7 flex items-center justify-between">
-      <button (click)="openGame(game.game_url)" class="rounded-2xl bg-amber-300 px-8 text-[125%] font-bold text-gray-800 uppercase transition hover:scale-120 hover:bg-sky-50 hover:text-gray-900 hover:shadow-lg hover:shadow-gray-900">Play</button>
-      <p class="text-sky-100">{{game.release_date}}</p>
+    <p class="font-mono line-clamp-3 h-16.5 pt-1.5 text-[110%] text-sky-100">{{game.short_description}}</p>
+    <p class="text-sky-100 mt-2">{{game.release_date}}</p> 
+
+    <div class="mt-auto pt-7 flex items-center justify-between">
+      <button (click)="openGame(game.game_url)" class="p-1 rounded-2xl bg-amber-300 px-8 text-[125%] font-bold text-gray-800 uppercase transition hover:scale-120 hover:bg-sky-50 hover:text-gray-900 hover:shadow-lg hover:shadow-gray-900">Play</button>
+      <button
+      type="button"
+      *ngIf="isFavorite$ | async as isFavorite; else notFavorite"
+      (click)="toggleFavorite(true)"
+      [disabled]="isProcessing"
+      class="uppercase px-3 py-1.5 rounded-md text-sm border border-red-500 text-red-600 hover:bg-red-50 disabled:opacity-50"
+    >
+      Quitar de favoritos
+    </button>
+    <ng-template #notFavorite>
+      <button
+        type="button"
+        (click)="toggleFavorite(false)"
+        [disabled]="isProcessing"
+        class="uppercase px-3 py-1.5 rounded-md text-sm border border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-gray-900 disabled:opacity-50"
+      >
+        Agregar a favoritos
+      </button>
+    </ng-template>
     </div>
   </div>
-  
 </section>
