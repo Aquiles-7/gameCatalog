@@ -1,14 +1,23 @@
-<div>
-  <app-filters-component class="ml-5 mt-3" (categorySelected)="onFilterChange($event)"></app-filters-component>
+<div class="ml-5 mt-3 flex flex-wrap items-center gap-3">
+  <app-filters-component (categorySelected)="onFilterChange($event)"></app-filters-component>
+  <app-search-component (searchChanged)="onSearchChange($event)"></app-search-component>
 </div>
+
 <main class="flex flex-wrap justify-center gap-6 py-6 ">
-  
+
 @for (game of games; track game.id) {
       <div class="transition-transform duration-200 hover:scale-[1.02] gap-6 ">
         <app-game-component class="flex flex-col items-center m-6" [game]="game"></app-game-component>
       </div>
-      
-    }
+} @empty {
+      @if (!loading) {
+        <p class="py-10 text-center text-gray-300">
+          No se encontraron juegos
+          @if (searchText) { <span>para "{{ searchText }}"</span> }
+        </p>
+      }
+}
+
 <div class="fixed inset-0 -z-10 bg-slate-900 ">
   <div class="absolute inset-0 bg-radial-[circle_at_center] from-sky-500/30 to-transparent"></div>
 </div>
