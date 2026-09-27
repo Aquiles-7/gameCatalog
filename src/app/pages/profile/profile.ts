@@ -6,6 +6,13 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Game } from '../../models/game';
 import { WishlistService } from '../../services/wishlist.service';
+import { Observable, map, startWith, catchError, of } from 'rxjs';
+
+interface WishlistViewState {
+  loading: boolean;
+  error: string | null;
+  favorites: Game[];
+}
 
 @Component({
   selector: 'app-profile',
@@ -21,9 +28,23 @@ export class Profile implements OnInit {
   submitted = false;
   message: string | null = null;
 
-  favorites: Game[] = [];
-  loading = true;
-  errorMessage: string | null = null;
+  // Un solo observable de "view state" (loading / error / favorites).
+  // Se consume en el template con "vm$ | async as vm": el AsyncPipe
+  // refresca la vista en cada emisión sin importar si el cambio llegó
+  // desde el listener de Firestore por fuera del ciclo normal de Angular
+  // (que es justo lo que causaba el bug de "carga recién al segundo clic").
+  vm$: Observable<WishlistViewState> = this.wishlistService.getWishlist().pipe(
+    map((games) => ({ loading: false, error: null, favorites: games } as WishlistViewState)),
+    startWith({ loading: true, error: null, favorites: [] } as WishlistViewState),
+    catchError((err) => {
+      console.error('Error al cargar la wishlist:', err);
+      return of({
+        loading: false,
+        error: 'No pudimos cargar tu lista de favoritos. Intentá de nuevo más tarde.',
+        favorites: [],
+      } as WishlistViewState);
+    })
+  );
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,7 +54,6 @@ export class Profile implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadFavorites();
     if (!this.Auth.isAuthenticated()) {
       this.router.navigate(['/registration']);
       return;
@@ -44,7 +64,7 @@ export class Profile implements OnInit {
       this.router.navigate(['/registration']);
       return;
     }
-    
+
     this.currentUser = {
       name: firebaseUser.displayName ?? '',
       email: firebaseUser.email ?? ''
@@ -56,31 +76,13 @@ export class Profile implements OnInit {
     });
   }
 
-  private loadFavorites(): void {
-    this.loading = true;
-    this.errorMessage = null;
-
-    this.wishlistService.getWishlist().subscribe({
-      next: (games) => {
-        this.favorites = games;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar la wishlist:', err);
-        this.errorMessage =
-          'No pudimos cargar tu lista de favoritos. Intentá de nuevo más tarde.';
-        this.loading = false;
-      },
-    });
-  }
-
   async removeFromWishlist(game: Game): Promise<void> {
     try {
       await this.wishlistService.removeGame(game);
-      this.favorites = this.favorites.filter((g) => g.id !== game.id);
+      // No hace falta actualizar nada a mano: al ser reactivo, vm$
+      // va a emitir de nuevo solo con la lista ya actualizada.
     } catch (err) {
       console.error('Error al eliminar de favoritos:', err);
-      this.errorMessage = 'No se pudo eliminar el juego. Intentá de nuevo.';
     }
   }
 
