@@ -1,59 +1,85 @@
 # GameCatalog
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.21.
+Aplicacion web para explorar un catalogo de juegos gratuitos, buscar y filtrar titulos, y guardar favoritos en una cuenta personal.
 
-## Development server
+## Funcionalidades
 
-To start a local development server, run:
+- Consulta el catalogo de juegos mediante la API publica de [FreeToGame](https://www.freetogame.com/api).
+- Filtra juegos por categoria y busca por titulo, genero, plataforma, desarrollador o descripcion. La busqueda ignora mayusculas y acentos.
+- Registra usuarios y permite iniciar sesion con correo y contrasena o con Google, usando Firebase Authentication.
+- Guarda y elimina juegos favoritos por usuario en Cloud Firestore.
+- Permite actualizar el nombre visible y la contrasena desde el perfil.
+- Protege la ruta del perfil para que solo usuarios autenticados puedan acceder.
 
-```bash
-ng serve
+## Tecnologias
+
+- Angular 21 y TypeScript.
+- Angular Router, Reactive Forms y HttpClient.
+- AngularFire y Firebase Authentication/Cloud Firestore.
+- RxJS para peticiones y flujos reactivos.
+- Angular Material en los controles del formulario de registro.
+- Vitest y jsdom para pruebas unitarias.
+- Tailwind CSS y PostCSS estan incluidos como dependencias del proyecto.
+
+## Estructura del proyecto
+
+```text
+src/
+src/app/
+src/app/components/          # Tarjeta de juego, busqueda y filtros
+src/app/guards/               # Proteccion de rutas autenticadas
+src/app/interface/            # Navegacion por pestanas
+src/app/models/               # Interfaces de juego, usuario y wishlist
+src/app/pages/                # Inicio, login, registro y perfil
+src/app/services/             # API de juegos, autenticacion, perfil y favoritos
+src/app/app.config.ts         # Proveedores de Angular y Firebase
+src/app/app.routes.ts         # Rutas de la aplicacion
+src/main.ts                   # Punto de entrada
+src/styles.css                # Estilos globales
+firestore.rules               # Reglas de acceso a Firestore
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Organizacion de la logica
 
-## Code scaffolding
+- `GameService` solicita los juegos a FreeToGame y construye parametros para los filtros de API.
+- La pagina de inicio mantiene la lista cargada y aplica localmente la busqueda por palabras.
+- El componente de busqueda espera 250 ms tras la escritura antes de emitir el texto, evitando busquedas por cada tecla.
+- `AuthService` encapsula el registro, acceso, acceso con Google, cierre de sesion y estado de autenticacion.
+- `WishlistService` escucha la wishlist del usuario actual y agrega o elimina juegos en `wishlists/{uid}`.
+- `ProfileService` obtiene al usuario y actualiza su nombre o contrasena.
+- `AuthGuard` impide el acceso al perfil sin iniciar sesion.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Requisitos
 
-```bash
-ng generate component component-name
-```
+- Node.js y npm compatibles con Angular 21.
+- Acceso a internet para consultar FreeToGame y Firebase.
+- Un proyecto Firebase configurado con Authentication y Cloud Firestore habilitados. Para el acceso con Google, habilita tambien el proveedor de Google en Firebase Authentication.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La configuracion de Firebase usada por la aplicacion esta en `src/app/app.config.ts`. Las reglas de `firestore.rules` permiten leer y escribir cada wishlist unicamente al usuario autenticado cuyo UID coincide con el ID del documento.
 
-```bash
-ng generate --help
-```
+## Instalacion y ejecucion
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Instala las dependencias:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Inicia el servidor de desarrollo:
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Abre `http://localhost:4200/`. El servidor recarga la aplicacion al detectar cambios en el codigo fuente.
 
-## Additional Resources
+## Comandos disponibles
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm start       # Servidor de desarrollo
+npm run build   # Compilacion de produccion
+npm test        # Pruebas unitarias con Vitest
+npm run watch   # Compilacion de desarrollo en modo watch
+```
+
+La compilacion se genera en `dist/`. No hay un script de pruebas end-to-end configurado en `package.json`.
